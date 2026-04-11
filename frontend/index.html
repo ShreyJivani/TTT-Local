@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartPrice Demo Console</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f7efe1;
+      --bg-2: #f3e5cf;
+      --ink: #2b2118;
+      --paper: #fff9ef;
+      --accent: #ff5a36;
+      --accent-2: #00897b;
+      --line: #d8c4a6;
+      --good: #0a8f5b;
+      --warn: #aa4f00;
+      --bad: #9f1d1d;
+      --shadow: 0 16px 40px rgba(70, 36, 0, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: "Space Grotesk", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 15% 0%, rgba(255, 90, 54, 0.2), transparent 30%),
+        radial-gradient(circle at 80% 18%, rgba(0, 137, 123, 0.16), transparent 35%),
+        linear-gradient(135deg, var(--bg), var(--bg-2));
+      overflow-x: hidden;
+    }
+
+    .bg-shape {
+      position: fixed;
+      border-radius: 999px;
+      filter: blur(2px);
+      z-index: -1;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    .shape-a {
+      width: 340px;
+      height: 340px;
+      top: -120px;
+      right: -100px;
+      background: #ff8f6e;
+      animation: driftA 12s ease-in-out infinite;
+    }
+
+    .shape-b {
+      width: 280px;
+      height: 280px;
+      bottom: -90px;
+      left: -80px;
+      background: #5dd6bf;
+      animation: driftB 14s ease-in-out infinite;
+    }
+
+    @keyframes driftA {
+      0%, 100% { transform: translateY(0px) translateX(0px); }
+      50% { transform: translateY(20px) translateX(-12px); }
+    }
+
+    @keyframes driftB {
+      0%, 100% { transform: translateY(0px) translateX(0px); }
+      50% { transform: translateY(-15px) translateX(16px); }
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 18px 30px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 18px;
+      animation: rise 0.55s ease;
+    }
+
+    .title {
+      margin: 0;
+      font-family: "DM Serif Display", Georgia, serif;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      line-height: 1.05;
+      letter-spacing: 0.2px;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      opacity: 0.85;
+      max-width: 65ch;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      background: #fff;
+      color: var(--ink);
+      transition: transform 0.15s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(40, 19, 0, 0.12);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: wait;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-main {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-main:hover {
+      background: #f44a22;
+    }
+
+    .btn-soft {
+      border-color: var(--line);
+      background: rgba(255, 249, 239, 0.8);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-title {
+      margin: 0;
+      font-size: 1rem;
+      letter-spacing: 0.25px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #5f4a36;
+    }
+
+    .stat {
+      font-size: 0.85rem;
+      opacity: 0.75;
+    }
+
+    .products {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      max-height: 72vh;
+      overflow: auto;
+    }
+
+    .product-card {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 14px;
+      padding: 12px;
+      cursor: pointer;
+      transition: border-color 0.2s ease, transform 0.15s ease;
+      animation: rise 0.35s ease both;
+    }
+
+    .product-card:hover {
+      transform: translateY(-1px);
+      border-color: #b99c74;
+    }
+
+    .product-card.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(255, 90, 54, 0.2);
+    }
+
+    .line-1 {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .name {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .chip {
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .chip-high {
+      color: #fff;
+      background: var(--bad);
+    }
+
+    .chip-stable {
+      color: #fff;
+      background: var(--warn);
+    }
+
+    .chip-low {
+      color: #fff;
+      background: var(--good);
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      font-size: 0.85rem;
+    }
+
+    .meta b {
+      display: block;
+      font-size: 0.75rem;
+      opacity: 0.7;
+      margin-bottom: 2px;
+    }
+
+    .side {
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .focus {
+      border: 1px dashed #b99c74;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.75);
+      padding: 12px;
+    }
+
+    .focus h3 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+    }
+
+    .kv {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+      font-size: 0.9rem;
+    }
+
+    .event-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .log {
+      min-height: 56px;
+      font-size: 0.85rem;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.7);
+      white-space: pre-wrap;
+    }
+
+    .recommendations {
+      display: grid;
+      gap: 8px;
+    }
+
+    .rec {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .muted {
+      opacity: 0.75;
+    }
+
+    .status-dot {
+      display: inline-flex;
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: #be381f;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    .status-dot.ok {
+      background: #1f9f60;
+    }
+
+    .toast {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      max-width: 320px;
+      background: #1f1b16;
+      color: #fff;
+      border-radius: 12px;
+      padding: 10px 12px;
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0px);
+      }
+    }
+
+    @media (max-width: 980px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .products {
+        max-height: 52vh;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-shape shape-a"></div>
+  <div class="bg-shape shape-b"></div>
+
+  <main class="page">
+    <section class="hero">
+      <div>
+        <h1 class="title">SmartPrice Demo Console</h1>
+        <p class="subtitle">
+          Live pricing control room for your FastAPI backend. Trigger events, watch demand shift,
+          and inspect recommendations in real time.
+        </p>
+      </div>
+      <div class="toolbar">
+        <button id="refreshBtn" class="btn btn-main">Refresh Products</button>
+        <button id="autoBtn" class="btn btn-soft" aria-pressed="false">Auto Refresh: Off</button>
+        <span id="apiStatus" class="stat"><span class="status-dot" id="statusDot"></span>API disconnected</span>
+      </div>
+    </section>
+
+    <section class="layout">
+      <article class="panel">
+        <header class="panel-head">
+          <h2 class="panel-title">Products</h2>
+          <span class="stat" id="productCount">0 items</span>
+        </header>
+        <div id="productsList" class="products"></div>
+      </article>
+
+      <aside class="panel side">
+        <section class="focus">
+          <h3 id="focusTitle">Select a product</h3>
+          <div class="kv">
+            <div><b>Product ID</b><span id="focusId">-</span></div>
+            <div><b>Category</b><span id="focusCategory">-</span></div>
+            <div><b>Base Price</b><span id="focusBase">-</span></div>
+            <div><b>Current Price</b><span id="focusCurrent">-</span></div>
+            <div><b>Demand</b><span id="focusDemand">-</span></div>
+            <div><b>Reason</b><span id="focusReason">-</span></div>
+          </div>
+        </section>
+
+        <section>
+          <h3 class="panel-title">Send Event</h3>
+          <div class="event-grid">
+            <button data-action="view" class="btn btn-soft event-btn">View</button>
+            <button data-action="cart" class="btn btn-soft event-btn">Cart</button>
+            <button data-action="purchase" class="btn btn-soft event-btn">Purchase</button>
+          </div>
+          <p class="muted" style="font-size:0.82rem; margin:8px 0 0;">Each click calls <code>POST /event</code> with a random demo user.</p>
+        </section>
+
+        <section>
+          <h3 class="panel-title">Last Event</h3>
+          <div id="eventLog" class="log">No event sent yet.</div>
+        </section>
+
+        <section>
+          <h3 class="panel-title">Recommendations</h3>
+          <div id="recommendations" class="recommendations muted">Select a product to load recommendations.</div>
+        </section>
+      </aside>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="./app.js" defer></script>
+</body>
+</html>

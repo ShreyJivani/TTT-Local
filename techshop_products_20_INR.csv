@@ -1,0 +1,21 @@
+product_id,category,name,price_inr,cost_inr,margin_inr
+101,Laptop,NimbusBook Pro 14,78999,64000,14999
+102,Laptop,AtlasBook Air 13,69999,57000,12999
+103,Laptop,ZenCore Creator 16,98999,81000,17999
+104,Laptop,VoltEdge Gaming 15,112999,92000,20999
+105,Smartphone,Orbit X1 5G,28999,22500,6499
+106,Smartphone,Orbit X1 Pro 5G,35999,28000,7999
+107,Smartphone,PixelNova Lite,21999,16800,5199
+108,Smartphone,PixelNova Max,41999,33200,8799
+109,Headphones,SonicPulse ANC 500,6999,4300,2699
+110,Headphones,SonicPulse ANC 700,9999,6200,3799
+111,Headphones,BeatFlow Sport Buds,3499,1900,1599
+112,Smartwatch,TimeSync Active,8499,5100,3399
+113,Smartwatch,TimeSync Elite,12999,8200,4799
+114,Smartwatch,PulseTrack Mini,6499,3800,2699
+115,Tablet,SlatePad 11,27999,21000,6999
+116,Tablet,SlatePad 13 Pro,45999,36000,9999
+117,Monitor,VisionFrame 24 IPS,12999,8700,4299
+118,Monitor,VisionFrame 27 QHD,21999,15500,6499
+119,Accessory,ChargeDock 3-in-1,2499,1300,1199
+120,Accessory,PowerBrick 65W GaN,2999,1550,1449
